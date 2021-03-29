@@ -19,7 +19,7 @@ def solve(diap, sort_fu, wh_fu, wsch_fu, WN, NW):
     d1, d2 = diap; f = 1 if wh_fu[0] == 'т' else 0
     x = lambda x: search_divs(x, f) #all
     y = lambda x: search_simples(x, f) #simp
-    u = lambda x, y: search_evod(x, f, y)
+    z = lambda x, y: search_evod(x, f, y)
     if not wsch_fu:
         a = [[i, len(x(i))] for i in range(d1, d2+1) if len(x(i)) in [WN, NW]]
         return a
@@ -28,7 +28,7 @@ def solve(diap, sort_fu, wh_fu, wsch_fu, WN, NW):
         return a
     if (let := wsch_fu[1]) in 'чн':
         trig = 0 if let == 'ч' else 1
-        a = [[i, len(u(i, trig))] for i in range(d1, d2+1) if len(u(i, trig)) in [WN, NW]]
+        a = [[i, len(z(i, trig))] for i in range(d1, d2 + 1) if len(z(i, trig)) in [WN, NW]]
         return a
 flag = 0
 while True:
