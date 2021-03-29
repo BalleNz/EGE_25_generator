@@ -68,7 +68,7 @@ while True:
 
     if hard == 0:
         if len(answer) < 3: flag = 1; continue
-    if len(answer) > 8: flag = 1; continue ###RESTART
+    if len(answer) > 8 or not answer: flag = 1; continue ###RESTART
 
     text = f'\nВ диапазоне [{diap[0]}; {diap[1]}] найдите числа, которые имеют {WN} или {NW}{wsch_fu} делителя(ей). ' \
            f'\nРассматривать {wh_fu} делители числа. ' \
