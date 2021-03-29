@@ -1,0 +1,78 @@
+from random import *
+def search_divs(numb, f):
+    a = sum([[d] if d**2 == numb else [d, numb//d] for d in range(1 if not f else 2, int(numb**0.5) + 1) if not numb%d], [])
+    if f: a += [1]
+    return sorted(a) #f = 1 -> no trivial
+def search_evod(number, f, f1): #f1 = 1 -> odd
+    if f1: a = [item for item in search_divs(number, f) if item%2]; return a
+    return [item for item in search_divs(number, f) if not item%2]
+def search_simples(number, f):
+    temp = list()
+    def iss(number):
+        for t in range(2, int(number**0.5)+1):
+            if number%t == 0: return False
+        return True if number != 1 else False
+    for item in search_divs(number, f):
+        if iss(item): temp.append(item)
+    return temp
+def solve(diap, sort_fu, wh_fu, wsch_fu, WN, NW):
+    d1, d2 = diap; f = 1 if wh_fu[0] == 'т' else 0
+    x = lambda x: search_divs(x, f) #all
+    y = lambda x: search_simples(x, f) #simp
+    u = lambda x, y: search_evod(x, f, y)
+    if not wsch_fu:
+        a = [[i, len(x(i))] for i in range(d1, d2+1) if len(x(i)) in [WN, NW]]
+        return a
+    if wsch_fu[1] == 'п':
+        a = [[i, len(y(i))] for i in range(d1, d2+1) if len(y(i)) in [WN, NW]]
+        return a
+    if (let := wsch_fu[1]) in 'чн':
+        trig = 0 if let == 'ч' else 1
+        a = [[i, len(u(i, trig))] for i in range(d1, d2+1) if len(u(i, trig)) in [WN, NW]]
+        return a
+flag = 0
+while True:
+    if not flag:
+        hard = int(input('\nКоэффициент сложности:   ')) #+2 SLOW; 0 — normal | 1+ — hard
+    else: flag = 0
+
+    if not hard: diap = sum([[randint(numb*3, numb*3), randint(numb*3+55, numb*3+76)] for numb in [randint(10000, 100000)]],[]) #diap
+    else: diap = sum([[numb*hard*3, randint(numb*3*hard+33100, numb*3*hard+43000)] for numb in [randint(200000, 400000)]],[])
+
+    opinions = [['возрастания', 'убывания'], ['только нетривиальные', 'все'], [' простых', ' чётных', ' нечётных', ' чётных', ' нечётных', '', '', '', '']] #select
+    sort_fu = [opinions[0][i] for i in [randint(0, len(opinions[0])-1)]][0]
+    wh_fu = [opinions[1][i] for i in [randint(0, len(opinions[1])-1)]][0]
+    wsch_fu = [opinions[2][i] for i in [randint(0, len(opinions[2])-1)]][0]
+
+    x = diap[0] // 50000 + 3 #k
+    if x > 65: x //= 2
+    x += hard*3
+
+    key = wsch_fu[1] if wsch_fu else 0 #k2, parameters
+    if key == 'п': #simp
+        if x > 16:
+            x = 7
+        elif x > 9: x = 6
+        else: x = 5
+        WN = x
+        NW = x+1
+    elif not key: #all
+        WN = x*3+1
+        NW = choice([i for i in range(WN + 1, WN * 2) if i % 2]) if not WN % 2 else choice([i for i in range(WN + 1, WN + 5) if not i % 2])
+    else: #odd/ev
+        WN = x + 5 if not x%2 else x + 6
+        NW = WN + x//2+1
+        if NW%2 == 0: NW += 1
+
+    answer = solve(diap, sort_fu, wh_fu, wsch_fu, WN, NW)
+
+    if hard == 0:
+        if len(answer) < 3: flag = 1; continue
+    if len(answer) > 8: flag = 1; continue ###RESTART
+
+    text = f'\nВ диапазоне [{diap[0]}; {diap[1]}] найдите числа, которые имеют {WN} или {NW}{wsch_fu} делителя(ей). ' \
+           f'\nРассматривать {wh_fu} делители числа. ' \
+           f'\nВ ответе необходимо вывести каждое найденное число, а также количество{wsch_fu} делителей. Каждый ответ расположите в порядке {sort_fu} с новой строки. ' \
+
+    print(text); input('\npress ENTER to see answer')
+    for j in answer: print(sorted(j) if sort_fu[0] == 'в' else sorted(j, reverse = 1))
