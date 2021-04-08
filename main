@@ -57,7 +57,7 @@ while True:
         WN = x
         NW = x+1
     elif not key: #all
-        WN = x*3+1
+        WN = randint(x+1, x*2)
         NW = choice([i for i in range(WN + 1, WN * 2) if i % 2]) if not WN % 2 else choice([i for i in range(WN + 1, WN + 5) if not i % 2])
     else: #odd/ev
         WN = randint(x+1, x*2)
