@@ -63,12 +63,15 @@ while True:
         WN = randint(x+1, x*2)
         NW = randint(x+2, x*3)
         if NW%2 == 0: NW += 1
-
+    if WN == NW: flag = 1; continue
     answer = solve(diap, sort_fu, wh_fu, wsch_fu, WN, NW)
 
     if hard == 0:
+        temp = [sorted(answer[i])[0] for i in range(len(answer))]
+        if WN not in temp or NW not in temp: flag = 1; continue
         if len(answer) < 3: flag = 1; continue
     if len(answer) > 8 or not answer: flag = 1; continue ###RESTART
+
 
     text = f'\nВ диапазоне [{diap[0]}; {diap[1]}] найдите числа, которые имеют {WN} или {NW}{wsch_fu} делителя(ей). ' \
            f'\nРассматривать {wh_fu} делители числа. ' \
